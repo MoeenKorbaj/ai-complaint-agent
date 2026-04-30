@@ -1,0 +1,43 @@
+﻿@model AIComplaintAgent.Models.ComplaintInputModel
+
+@{
+    ViewData["Title"] = "AI Complaint Agent";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">🤖 AI Customer Complaint Agent</h4>
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.ErrorMessage != null)
+                    {
+                        <div class="alert alert-danger mb-3">
+                            ⚠️ @ViewBag.ErrorMessage
+                        </div>
+                    }
+                    <form asp-action="Analyze" method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Customer Name</label>
+                            <input asp-for="CustomerName" class="form-control" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input asp-for="Email" type="email" class="form-control" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Complaint</label>
+                            <textarea asp-for="ComplaintText" class="form-control"
+                                      rows="5" placeholder="Describe your complaint..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            Analyze Complaint
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

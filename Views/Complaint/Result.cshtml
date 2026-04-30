@@ -1,0 +1,68 @@
+﻿@model AIComplaintAgent.Models.ComplaintResultModel
+
+@{
+    ViewData["Title"] = "Analysis Result";
+    var priorityColor = Model.Priority switch
+    {
+        "High" => "danger",
+        "Medium" => "warning",
+        _ => "success"
+    };
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">✅ Analysis Complete</h4>
+                </div>
+                <div class="card-body">
+                    <h6 class="text-muted">Customer</h6>
+                    <p class="fw-bold">@Model.CustomerName</p>
+
+                    <h6 class="text-muted">Complaint</h6>
+                    <p class="fst-italic">@Model.ComplaintText</p>
+
+                    <hr />
+
+                    <div class="row text-center mb-3">
+                        <div class="col-4">
+                            <div class="bg-light rounded p-2">
+                                <small class="text-muted d-block">Type</small>
+                                <strong>@Model.Type</strong>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="bg-light rounded p-2">
+                                <small class="text-muted d-block">Sentiment</small>
+                                <strong>@Model.Sentiment</strong>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="bg-light rounded p-2">
+                                <small class="text-muted d-block">Priority</small>
+                                <span class="badge bg-@priorityColor">@Model.Priority</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="text-muted">Summary</h6>
+                    <p>@Model.Summary</p>
+                    <h6 class="text-muted">Our Response to Customer</h6>
+                    <div class="alert alert-success">
+                        💬 <strong>@Model.CustomerResponse</strong>
+                    </div>
+                    <h6 class="text-muted">Agent Decision</h6>
+                    <div class="alert alert-info">
+                        🤖 <strong>@Model.DecidedAction</strong>
+                    </div>
+
+                    <a asp-action="Index" class="btn btn-outline-primary w-100">
+                        Submit Another Complaint
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
