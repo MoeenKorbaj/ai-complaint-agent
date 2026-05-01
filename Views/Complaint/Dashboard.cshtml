@@ -65,6 +65,8 @@
                         <th>Action</th>
                         <th>Date</th>
                         <th>Details</th>
+                        <th>Status</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -114,6 +116,35 @@
                                     View
                                 </a>
                             </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    @if (complaint.Status == "Open")
+                                    {
+                                        <span class="badge bg-danger px-2 py-1">New</span>
+                                        <a asp-action="UpdateStatus"
+                                           asp-route-id="@complaint.Id"
+                                           asp-route-status="InProgress"
+                                           class="btn btn-sm btn-primary">
+                                            Start →
+                                        </a>
+                                    }
+                                    else if (complaint.Status == "InProgress")
+                                    {
+                                        <span class="badge bg-warning text-dark px-2 py-1">In Progress</span>
+                                        <a asp-action="UpdateStatus"
+                                           asp-route-id="@complaint.Id"
+                                           asp-route-status="Resolved"
+                                           class="btn btn-sm btn-success">
+                                            Resolve ✅
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success px-2 py-1">Resolved ✅</span>
+                                    }
+                                </div>
+                            </td>
+
                         </tr>
                     }
                 </tbody>

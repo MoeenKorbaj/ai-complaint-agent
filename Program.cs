@@ -3,6 +3,9 @@ using AIComplaintAgent.Plugins;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.SemanticKernel;
 using AIComplaintAgent.Services;
+using AIComplaintAgent.Agents;
+using AIComplaintAgent.Functions;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +14,8 @@ var builder = WebApplication.CreateBuilder(args);
         builder.Configuration.GetConnectionString("DefaultConnection")));*/
 builder.Services.AddScoped<EmailPlugin>();
 builder.Services.AddScoped<ContentSafetyService>();
+builder.Services.AddScoped<ComplaintService>();
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"),
@@ -25,7 +30,10 @@ builder.Services.AddKernel()
         endpoint: builder.Configuration["AzureOpenAI:Endpoint"]!,
         apiKey: builder.Configuration["AzureOpenAI:ApiKey"]!
     );
-
+builder.Services.AddScoped<ComplaintAgentService>();
+builder.Services.AddScoped<FollowUpAgent>();
+//builder.Services.AddScoped<FollowUpFunction>();
+builder.Services.AddHostedService<FollowUpBackgroundService>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
