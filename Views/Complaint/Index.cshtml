@@ -1,9 +1,7 @@
 ﻿@model AIComplaintAgent.Models.ComplaintInputModel
-
 @{
     ViewData["Title"] = "AI Complaint Agent";
 }
-
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -32,6 +30,12 @@
                             <textarea asp-for="ComplaintText" class="form-control"
                                       rows="5" placeholder="Describe your complaint..." required></textarea>
                         </div>
+                        <div class="mb-3">
+                            <button type="button" id="recordBtn" class="btn btn-outline-danger w-100">
+                                🎤 Record Complaint
+                            </button>
+                            <small id="recordStatus" class="text-muted d-block mt-1"></small>
+                        </div>
                         <button type="submit" class="btn btn-primary w-100">
                             Send Complaint
                         </button>
@@ -41,3 +45,36 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        const recordBtn = document.getElementById('recordBtn');
+        const recordStatus = document.getElementById('recordStatus');
+        const complaintText = document.getElementById('ComplaintText');
+
+        recordBtn.addEventListener('click', async () => {
+            recordBtn.disabled = true;
+            recordBtn.innerText = '🔴 Recording...';
+            recordStatus.innerText = 'Listening... speak now';
+
+            try {
+                const response = await fetch('/Complaint/StartRecording', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    complaintText.value = data.text;
+                    recordStatus.innerText = '✅ Voice captured successfully';
+                } else {
+                    recordStatus.innerText = '❌ Could not capture voice. Try again.';
+                }
+            } catch (error) {
+                recordStatus.innerText = '❌ Error occurred. Try again.';
+            } finally {
+                recordBtn.disabled = false;
+                recordBtn.innerText = '🎤 Record Complaint';
+            }
+        });
+    </script>
+}

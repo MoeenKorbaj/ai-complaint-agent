@@ -13,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")));*/
 builder.Services.AddScoped<EmailPlugin>();
+builder.Services.AddScoped<SpeechService>();
 builder.Services.AddScoped<ContentSafetyService>();
 builder.Services.AddScoped<ComplaintService>();
 

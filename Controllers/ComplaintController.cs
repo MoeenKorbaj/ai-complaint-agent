@@ -10,13 +10,17 @@ public class ComplaintController : Controller
 {
     private readonly AppDbContext _db;
     private readonly ComplaintService _complaintService;
+    private readonly SpeechService _speechService;
+
 
     public ComplaintController(
-        AppDbContext db,
-        ComplaintService complaintService)
+     AppDbContext db,
+     ComplaintService complaintService,
+     SpeechService speechService)
     {
         _db = db;
         _complaintService = complaintService;
+        _speechService = speechService;
     }
 
     public IActionResult Index()
@@ -42,6 +46,16 @@ public class ComplaintController : Controller
             .ProcessComplaintAsync(input);
 
         return View("Confirmation", complaint);
+    }
+    [HttpPost]
+    public async Task<IActionResult> StartRecording()
+    {
+        var text = await _speechService.RecognizeSpeechAsync();
+
+        if (text != null)
+            return Json(new { success = true, text });
+
+        return Json(new { success = false, text = "" });
     }
 
     public async Task<IActionResult> Dashboard()
