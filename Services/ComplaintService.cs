@@ -55,7 +55,13 @@ public class ComplaintService
             CreatedAt = DateTime.UtcNow,
             Status = "Open"
         };
-
+        // Auto-resolve Low priority complaints
+        if (complaint.Priority == "Low")
+        {
+            complaint.Status = "Resolved";
+            complaint.ResolvedAt = DateTime.UtcNow;
+           
+        }
         _db.Complaints.Add(complaint);
         await _db.SaveChangesAsync();
 

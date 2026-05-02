@@ -5,17 +5,23 @@ using Microsoft.SemanticKernel;
 using AIComplaintAgent.Services;
 using AIComplaintAgent.Agents;
 using AIComplaintAgent.Functions;
+using Azure.Identity;
 
 
 
 var builder = WebApplication.CreateBuilder(args);
-/*builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection")));*/
+// Connect to Key Vault using Managed Identity
+var keyVaultUrl = new Uri("https://complaint-kv.vault.azure.net/");
+builder.Configuration.AddAzureKeyVault(
+    keyVaultUrl,
+    new DefaultAzureCredential());
+
 builder.Services.AddScoped<EmailPlugin>();
 builder.Services.AddScoped<SpeechService>();
 builder.Services.AddScoped<ContentSafetyService>();
 builder.Services.AddScoped<ComplaintService>();
+builder.Services.AddApplicationInsightsTelemetry();
+
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(

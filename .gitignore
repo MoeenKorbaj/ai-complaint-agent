@@ -16,6 +16,14 @@
 
 # Mono auto generated files
 mono_crash.*
+# User Secrets
+**/secrets.json
+
+# Development settings
+appsettings.Development.json
+
+# Published output
+**/publish/
 
 # Build results
 [Dd]ebug/
