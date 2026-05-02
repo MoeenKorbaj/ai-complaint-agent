@@ -11,16 +11,20 @@ public class ComplaintController : Controller
     private readonly AppDbContext _db;
     private readonly ComplaintService _complaintService;
     private readonly SpeechService _speechService;
+    private readonly IConfiguration _config;
+
 
 
     public ComplaintController(
-     AppDbContext db,
-     ComplaintService complaintService,
-     SpeechService speechService)
+    AppDbContext db,
+    ComplaintService complaintService,
+    SpeechService speechService,
+    IConfiguration config)
     {
         _db = db;
         _complaintService = complaintService;
         _speechService = speechService;
+        _config = config;
     }
 
     public IActionResult Index()
@@ -56,6 +60,23 @@ public class ComplaintController : Controller
             return Json(new { success = true, text });
 
         return Json(new { success = false, text = "" });
+    }
+    [HttpGet]
+    public async Task<IActionResult> GetSpeechToken()
+    {
+        var key = _config["AzureSpeech:Key"];
+        var region = _config["AzureSpeech:Region"];
+
+        using var client = new HttpClient();
+        client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", key);
+
+        var response = await client.PostAsync(
+            $"https://{region}.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            null);
+
+        var token = await response.Content.ReadAsStringAsync();
+
+        return Json(new { token, region });
     }
 
     public async Task<IActionResult> Dashboard()
